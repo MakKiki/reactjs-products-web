@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Filter = (props) => {
   const [name, setName] = useState("");
@@ -17,29 +17,20 @@ const Filter = (props) => {
   const [lowerPrice, setLowerPrice] = useState(0);
   const [upperPrice, setUpperPrice] = useState(5000);
 
-  const handleFilter = (attribute, value) => {
+  useEffect(() => {
     props.setFilteredProducts(
       props.products.filter((product) => {
         return (
-          product.title
-            .toLowerCase()
-            .includes(
-              attribute === "name" ? value.toLowerCase() : name.toLowerCase()
-            ) &&
-          product.brand
-            .toLowerCase()
-            .includes(
-              attribute === "brand" ? value.toLowerCase() : brand.toLowerCase()
-            ) &&
-          product.category.includes(
-            attribute === "category" ? value : category
-          ) &&
-          product.price >= (attribute === "lowerPrice" ? value : lowerPrice) &&
-          product.price <= (attribute === "upperPrice" ? value : upperPrice)
+          product.title.toLowerCase().includes(name.toLowerCase()) &&
+          product.brand.toLowerCase().includes(brand.toLowerCase()) &&
+          product.category.includes(category) &&
+          product.price >= lowerPrice &&
+          product.price <= (upperPrice === "" ? 5000 : upperPrice)
         );
       })
     );
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, brand, category, lowerPrice, upperPrice]);
 
   return (
     <div
@@ -59,7 +50,6 @@ const Filter = (props) => {
             placeholder="Enter A Model Name"
             onChange={(event) => {
               setName(event.target.value);
-              handleFilter("name", event.target.value);
             }}
             value={name}
           />
@@ -76,7 +66,6 @@ const Filter = (props) => {
             placeholder="Enter A Brand"
             onChange={(event) => {
               setBrand(event.target.value);
-              handleFilter("brand", event.target.value);
             }}
             value={brand}
           />
@@ -92,7 +81,6 @@ const Filter = (props) => {
             aria-label="Search By Selecting Category"
             onChange={(event) => {
               setCategory(event.target.value);
-              handleFilter("category", event.target.value);
             }}
             value={category}
           >
@@ -122,12 +110,7 @@ const Filter = (props) => {
                   placeholder="Enter A Lower Price"
                   aria-describedby="from$"
                   onChange={(event) => {
-                    let price = event.target.value;
-                    if (price === "") {
-                      price = 0;
-                    }
-                    setLowerPrice(price);
-                    handleFilter("lowerPrice", price);
+                    setLowerPrice(event.target.value);
                   }}
                   value={lowerPrice}
                 />
@@ -147,12 +130,7 @@ const Filter = (props) => {
                   placeholder="Enter A Upper Price"
                   aria-describedby="to$"
                   onChange={(event) => {
-                    let price = event.target.value;
-                    if (price === "") {
-                      price = 5000;
-                    }
-                    setUpperPrice(price);
-                    handleFilter("upperPrice", price);
+                    setUpperPrice(event.target.value);
                   }}
                   value={upperPrice}
                 />
