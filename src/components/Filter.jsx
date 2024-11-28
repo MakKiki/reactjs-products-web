@@ -7,12 +7,10 @@ const Filter = (props) => {
   const [category, setCategory] = useState("");
   const categoryList = [
     { name: "All", value: "" },
-    { name: "smartphones", value: "smartphones" },
-    { name: "laptops", value: "laptops" },
+    { name: "beauty", value: "beauty" },
     { name: "fragrances", value: "fragrances" },
-    { name: "skincare", value: "skincare" },
+    { name: "furniture", value: "furniture" },
     { name: "groceries", value: "groceries" },
-    { name: "home-decoration", value: "home-decoration" },
   ];
   const [lowerPrice, setLowerPrice] = useState(0);
   const [upperPrice, setUpperPrice] = useState(5000);
@@ -21,8 +19,8 @@ const Filter = (props) => {
     props.setFilteredProducts(
       props.products.filter((product) => {
         return (
-          product.title.toLowerCase().includes(name.toLowerCase()) &&
-          product.brand.toLowerCase().includes(brand.toLowerCase()) &&
+          (product.title && product.title.toLowerCase().includes(name.toLowerCase())) &&
+          (product.brand && product.brand.toLowerCase().includes(brand.toLowerCase())) &&
           product.category.includes(category) &&
           product.price >= lowerPrice &&
           product.price <= (upperPrice === "" ? 5000 : upperPrice)
